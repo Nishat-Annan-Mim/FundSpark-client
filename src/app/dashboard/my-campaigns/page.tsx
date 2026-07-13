@@ -64,7 +64,8 @@ export default function MyCampaignsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this campaign? Approved supporters will be refunded.")) return;
+    if (!confirm("Delete this campaign? Approved supporters will be refunded."))
+      return;
     try {
       await axiosInstance.delete(`/campaigns/${id}`);
       toast.success("Campaign deleted, refunds issued");
@@ -91,7 +92,9 @@ export default function MyCampaignsPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-slate-800 mb-6">My Campaigns</h1>
+      <h1 className="text-xl font-semibold text-slate-800 mb-6">
+        My Campaigns
+      </h1>
 
       {campaigns.length === 0 ? (
         <p className="text-slate-400">You haven't created any campaigns yet.</p>
@@ -110,7 +113,10 @@ export default function MyCampaignsPage() {
             </thead>
             <tbody>
               {campaigns.map((c) => (
-                <tr key={c._id} className="border-b border-slate-50 last:border-0">
+                <tr
+                  key={c._id}
+                  className="border-b border-slate-50 last:border-0"
+                >
                   <td className="px-4 py-3 font-medium text-slate-700">
                     {c.campaign_title}
                   </td>
@@ -124,7 +130,7 @@ export default function MyCampaignsPage() {
                   <td className="px-4 py-3">
                     <span
                       className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${statusColor(
-                        c.status
+                        c.status,
                       )}`}
                     >
                       {c.status}
@@ -158,7 +164,9 @@ export default function MyCampaignsPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-xl p-6 w-full max-w-lg"
           >
-            <h2 className="font-semibold text-slate-800 mb-4">Update Campaign</h2>
+            <h2 className="font-semibold text-slate-800 mb-4">
+              Update Campaign
+            </h2>
             <div className="space-y-3">
               <input
                 type="text"
