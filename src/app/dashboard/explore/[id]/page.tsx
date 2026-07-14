@@ -29,6 +29,8 @@ export default function CampaignDetailsPage() {
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [showReportBox, setShowReportBox] = useState(false);
+  const [reportReason, setReportReason] = useState("");
 
   useEffect(() => {
     axiosInstance
@@ -56,6 +58,22 @@ export default function CampaignDetailsPage() {
       toast.error(err.response?.data?.message || "Contribution failed");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleReport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!campaign) return;
+    try {
+      await axiosInstance.post("/reports", {
+        campaign_id: campaign._id,
+        reason: reportReason,
+      });
+      toast.success("Report submitted to admin");
+      setReportReason("");
+      setShowReportBox(false);
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to submit report");
     }
   };
 
@@ -90,7 +108,7 @@ export default function CampaignDetailsPage() {
           style={{
             width: `${Math.min(
               (campaign.amount_raised / campaign.funding_goal) * 100,
-              100
+              100,
             )}%`,
           }}
         />
@@ -116,6 +134,46 @@ export default function CampaignDetailsPage() {
         <p className="text-slate-400 text-xs">
           Minimum contribution: {campaign.minimum_contribution} credits
         </p>
+      </div>
+
+      <div className="mb-6">
+        {!showReportBox ? (
+          <button
+            onClick={() => setShowReportBox(true)}
+            className="text-xs text-red-500 hover:underline"
+          >
+            Report this campaign as suspicious or fraudulent
+          </button>
+        ) : (
+          <form
+            onSubmit={handleReport}
+            className="bg-red-50 rounded-lg p-4 space-y-2"
+          >
+            <textarea
+              required
+              rows={2}
+              placeholder="Describe why this campaign seems suspicious..."
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+              className="w-full px-3 py-2 border border-red-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+            />
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className="bg-red-600 hover:bg-red-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg"
+              >
+                Submit Report
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowReportBox(false)}
+                className="text-xs text-slate-500 hover:underline"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       {isExpired ? (
