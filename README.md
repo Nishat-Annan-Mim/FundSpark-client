@@ -6,8 +6,8 @@ FundSpark is a full-stack crowdfunding platform where Creators launch campaigns 
 
 - **Live Site (Frontend):** https://fund-spark-client.vercel.app
 - **Backend API:** https://fundspark-server.onrender.com
-- **Client GitHub Repository:** https://github.com/YOUR_USERNAME/YOUR_CLIENT_REPO
-- **Server GitHub Repository:** https://github.com/YOUR_USERNAME/YOUR_SERVER_REPO
+- **Client GitHub Repository:** https://github.com/Nishat-Annan-Mim/FundSpark-client
+- **Server GitHub Repository:** https://github.com/Nishat-Annan-Mim/FundSpark-client
 
 ## 🔑 Admin Credentials
 
@@ -69,3 +69,49 @@ FundSpark is a full-stack crowdfunding platform where Creators launch campaigns 
 | **Admin**     | Approve/reject campaigns, manage all users and roles, manage/delete any campaign, process withdrawal requests, review and act on reports                              |
 
 ## 📂 Project Structure
+
+fundspark/
+├── client/ # Next.js frontend
+│ ├── src/
+│ │ ├── app/ # App Router pages (public + dashboard routes)
+│ │ ├── components/ # Reusable UI components
+│ │ └── lib/ # Auth client, axios instance, hooks
+│ └── .env.local
+└── server/ # Express backend
+├── config/ # MongoDB connection
+├── controllers/ # Route logic
+├── middleware/ # Session + role verification
+├── models/ # Mongoose schemas
+├── routes/ # API endpoints
+├── utils/ # Notification helper
+└── .env
+
+## 🚀 Running Locally
+
+**Server**
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+**Client**
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Both require their respective `.env` / `.env.local` files configured with MongoDB, Better Auth, Google OAuth, and Stripe credentials.
+
+## 💳 Credit & Payment Rules
+
+- Supporters purchase credits at a rate reflected in fixed packages (e.g. 100 credits for $10).
+- Creators withdraw at a platform rate of **20 credits = $1**, meaning the platform retains a spread between purchase and withdrawal rates as its revenue model.
+- Minimum withdrawal threshold: **200 credits ($10)**.
+
+---
+
+_Built as an academic assignment demonstrating full-stack MERN-style development with modern authentication, real payment processing, and role-based access control._
