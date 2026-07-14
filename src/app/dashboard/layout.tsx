@@ -7,7 +7,7 @@ import axiosInstance from "@/lib/axios";
 import Sidebar from "@/components/dashboard/Sidebar";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import NotificationBell from "@/components/dashboard/NotificationBell";
-import { Menu, Coins } from "lucide-react";
+import { Menu } from "lucide-react";
 
 interface DbUser {
   _id: string;
@@ -38,7 +38,6 @@ export default function DashboardLayout({
     const syncAndFetch = async () => {
       if (!session?.user?.email) return;
       try {
-        // Ensure synced (safe no-op if already exists)
         await axiosInstance.post("/users/sync", {
           name: session.user.name,
           email: session.user.email,
@@ -86,29 +85,7 @@ export default function DashboardLayout({
           <span className="font-semibold text-slate-800">Dashboard</span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-sm font-medium">
-            <Coins size={14} />
-            {dbUser.credits}
-          </div>
-          <NotificationBell />
-          <div className="flex items-center gap-2">
-            <img
-              src={
-                dbUser.photoURL ||
-                "https://api.dicebear.com/7.x/initials/svg?seed=" + dbUser.name
-              }
-              alt={dbUser.name}
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <div className="hidden sm:block text-sm">
-              <p className="font-medium text-slate-700 leading-tight">
-                {dbUser.name}
-              </p>
-              <p className="text-slate-400 text-xs capitalize">{dbUser.role}</p>
-            </div>
-          </div>
-        </div>
+        <NotificationBell />
       </div>
 
       <div className="flex flex-1">
