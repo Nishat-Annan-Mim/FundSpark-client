@@ -18,8 +18,20 @@ export const auth = betterAuth({
     },
   },
   session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // refresh every 1 day
+    expiresIn: 60 * 60 * 24 * 7,
+    updateAge: 60 * 60 * 24,
   },
-  trustedOrigins: [process.env.NEXT_PUBLIC_API_URL as string],
+  trustedOrigins: [
+    process.env.NEXT_PUBLIC_API_URL as string,
+    process.env.BETTER_AUTH_URL as string,
+  ],
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: false, // Vercel + Render are different domains, not subdomains
+    },
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true, // required for sameSite: none, works on https (both Vercel/Render are https)
+    },
+  },
 });

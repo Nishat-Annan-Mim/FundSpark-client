@@ -91,7 +91,7 @@ export default function DashboardLayout({
             <Coins size={14} />
             {dbUser.credits}
           </div>
-          <NotificationBell notifications={[]} />
+          <NotificationBell />
           <div className="flex items-center gap-2">
             <img
               src={

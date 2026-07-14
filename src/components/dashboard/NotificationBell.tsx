@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Bell } from "lucide-react";
+import axiosInstance from "@/lib/axios";
 
 interface Notification {
   _id: string;
@@ -11,13 +12,26 @@ interface Notification {
   read: boolean;
 }
 
-export default function NotificationBell({
-  notifications = [],
-}: {
-  notifications?: Notification[];
-}) {
+export default function NotificationBell() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await axiosInstance.get("/notifications/mine");
+      setNotifications(res.data);
+    } catch (err) {
+      setNotifications([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    // Poll every 30s so new notifications appear without a full page refresh
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -29,14 +43,29 @@ export default function NotificationBell({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const handleToggle = async () => {
+    const willOpen = !open;
+    setOpen(willOpen);
+    if (willOpen && unreadCount > 0) {
+      try {
+        await axiosInstance.put("/notifications/mark-read");
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      } catch (err) {
+        // fail silently, not critical
+      }
+    }
+  };
+
   return (
     <div className="relative" ref={ref}>
       <button
-        onClick={() => setOpen(!open)}
+        onClick={handleToggle}
         className="relative p-2 rounded-full hover:bg-slate-100 transition"
       >
         <Bell size={20} className="text-slate-600" />
-        {notifications.length > 0 && (
+        {unreadCount > 0 && (
           <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
         )}
       </button>
